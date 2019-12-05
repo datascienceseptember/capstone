@@ -1,6 +1,6 @@
 library(tidyverse)
 require(data.table)
-
+getwd()
 #Data analysis
 #Analysis of data base on age>=25 ,state=us  
 
@@ -29,6 +29,8 @@ dim(combine_2017_2014)
 
 
 filtered_data_2017=filter(combine_2017_2014,MAGER>=25 & MBSTATE_REC==1)
+
+
 
 dim(filtered_data_2017)
 grouped_data=filtered_data_2017%>%group_by(MEDUC,DOB_YY)%>%summarise(total=n(),percent=n()/100)
@@ -75,21 +77,21 @@ ggplot(summay_data, aes(motherEducation, total, colour = MEDUC)) + geom_point()
 
 
 #select for variable for 2017
-#select_data_2017_infection=select(csv_2017_data,DOB_YY,MEDUC,MAGER,MBSTATE_REC,IP_GON,IP_SYPH,IP_CHLAM,IP_HEPB,IP_HEPC)
-#select_data_2014_infection=na.omit(select(csv_2014_data,DOB_YY,MEDUC,MAGER,MBSTATE_REC,IP_GON,IP_SYPH,IP_CHLAM,IP_HEPB,IP_HEPC))
-#dim(select_data_2017)
+select_data_2017_infection=select(csv_2017_data,DOB_YY,DOB_MM,MEDUC,MAGER,MBSTATE_REC,IP_GON,IP_SYPH,IP_CHLAM,IP_HEPB,IP_HEPC,SEX,DMAR)
+select_data_2014_infection=na.omit(select(csv_2014_data,DOB_YY,DOB_MM,MEDUC,MAGER,MBSTATE_REC,IP_GON,IP_SYPH,IP_CHLAM,IP_HEPB,IP_HEPC,SEX,DMAR))
+dim(select_data_2017)
 
 
-#combine_2017_2014_infection <- rbind(select_data_2017_infection, select_data_2014_infection)
+combine_2017_2014_infection <- rbind(select_data_2017_infection, select_data_2014_infection)
 
-#combine_2017_2014_infection
+combine_2017_2014_infection
 
-#dim(combine_2017_2014_infection)
+dim(combine_2017_2014_infection)
 
-#select_data_2017_all_infection= combine_2017_2014_infection
-#select_data_2017_all_infection
+select_data_2017_all_infection= combine_2017_2014_infection%>%mutate(motherEducation=sapply(MEDUC, mother_ed))%>% filter(MBSTATE_REC==1)
+select_data_2017_all_infection
 
-#write.csv(select_data_2017_all_infection,"infected_mother.csv", row.names = FALSE)
+write.csv(select_data_2017_all_infection,"infection.csv", row.names = FALSE)
 #select varible for 2014 infected_mother
 
 
@@ -113,5 +115,28 @@ check_diseas <- function(val){
   
 check_diseas("Gonorrhea")
 
+
+
+#Difference btn male and female  birth on the year
+
+#select for variable for 2017
+select_data_2017_gender=select(csv_2017_data,SEX,DOB_YY)
+select_data_2017_gender
+dim(select_data_2017_gender)
+#select varible for 2014
+
+select_data_2014_gender=na.omit(select(csv_2014_data,SEX,DOB_YY))
+dim(select_data_2014_gender)
+select_data_2014_gender
+#combine for 2017 and 2014
+
+combine_2017_2014_gender <- rbind(select_data_2017_gender, select_data_2014_gender)
+
+dim(combine_2017_2014_gender)
+
+combine_2017_2014_gender=combine_2017_2014_gender%>%group_by(SEX,DOB_YY)%>%summarise(total=n())
+combine_2017_2014_gender
+
+write.csv(combine_2017_2014_gender,"different_btn_m_f_birth.csv", row.names = FALSE)
 
 

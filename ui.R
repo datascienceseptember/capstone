@@ -3,14 +3,13 @@ library(shinydashboard)
 library(DT)
 require(data.table)
 
-#csv_2017_data=fread("2017_cdc.csv", header = T)
-#read csv for 2014
-#csv_2014_data=fread("Nat2014us.csv", header = T)
-infected_mother=fread("infected_mother.csv", header = T)
+#infected_mother=fread("infection.csv", header = T)
+
 
 mother_birth_education_age=fread("mother_birth_education_age.csv", header = T)
-mother_birth_education_age
 
+
+gender=fread("different_btn_m_f_birth.csv",header = T)
 
 
 year<- c(2017,2016,2015,2014)
@@ -18,18 +17,11 @@ infection<- c("Gonorrhea","Syphilis","Chlamydia","Hepatitis B","Hepatitis C")
 state= c("Us")
 
 
-data = read.csv('uefa.csv', stringsAsFactors=FALSE)
-team =data%>%select(.,HomeTeam,AwayTeam)
-action=data%>%select(.,-HomeTeam,-AwayTeam,-X)
-
-
-
-
-
 dashboardPage(
   dashboardHeader(
     
-    title = "CDC",
+    title = "Center for disease Control and Prevention",
+   
     
     
     dropdownMenu(
@@ -42,21 +34,37 @@ dashboardPage(
   
   #side bar
   dashboardSidebar(
-    sidebarUserPanel(image ="uefalogo.png",name = "" ),
+    sidebarUserPanel(image ="cdc_logo_1.jpeg",name = "CDC" ),
     
     
+   
     
     
+    #Infection Base on Age & Education
     sidebarMenu(
       hr(),
-      menuItem("Infection", tabName = "infection", icon = icon("database")),
+      menuItem( tags$div(HTML("<h4>Infection Base on"), 
+                              tags$br(),
+                              HTML("<h4>Age & Education</h4>")), tabName = "infection", icon = icon("")),
+      
+      
+      menuItem(tags$div(HTML("<h4>Infection btn "), 
+                        tags$br(),
+                        HTML("<h4>Male and Female</h4>")), tabName = "infection_male_female", icon = icon("")),
       hr(),
-      menuItem("Mother Eduction", tabName = "med", icon = icon("home")),
+      menuItem(tags$div(HTML("<h4>Mother Birth base"), 
+                        tags$br(),
+                        HTML("<h4>on  Eduction </h4>")), tabName = "med", icon = icon("")),
+      hr(),
+      menuItem(tags$div(HTML("<h4>Birth Gender</h4>")), tabName = "gender", icon = icon("")),
+      hr(),
+      
+      
+      menuItem(tags$div(HTML("<h4>Mother marrige "), 
+                        tags$br(),
+                        HTML("<h4>Base on Education</h4>")), tabName = "marriage", icon = icon("")),
       hr()
-      
-      
-      
-      
+    
     )
   ),
   #end of side bar
@@ -106,6 +114,10 @@ dashboardPage(
               
               fluidRow(
                 column(12, plotOutput("infection"))
+              ),
+              
+              fluidRow(
+                column(12, plotOutput("infection_base_on_education"))
               )
       ),
       
@@ -137,7 +149,80 @@ dashboardPage(
                 column(12, plotOutput("av_mother_education"))
               )
               
-      ) 
+      ),
+      
+      #gender
+      
+      
+      tabItem(tabName = "gender",
+              br(),
+              
+              
+             
+              br(),
+              br(),
+              
+              fluidRow(
+                column(6, plotOutput("gendertotal_2017")),
+                column(6, plotOutput("gendertotal_2014"))
+              )
+              
+               ),
+      
+      
+      
+      
+      
+      #infection male and female
+      
+      tabItem(tabName = "infection_male_female",
+              br(),
+              fluidRow(column(12,tags$div(HTML(toupper("<h4><strong>Graph show the difference btn male and female affected with Diseases</strong></h4>"))),offset =0)),
+              br(),
+              br(),
+              br(),
+              fluidRow(
+               
+                column(4,
+                       selectInput( inputId= "male_female_infec", 
+                                    label =  "Infection:", 
+                                    choices =  infection)
+                ),
+                ),
+              
+              fluidRow(
+                column(12, plotOutput("male_female_infection"))
+              ),
+              br(),
+              br(),
+              br(),
+              
+              fluidRow(
+                column(12, plotOutput("total_male_female_infection"))
+              )
+      ),
+      
+      
+      #end of infection of male and female 
+      
+      #marriage base on education
+      
+      tabItem(tabName = "marriage",
+              br(),
+              fluidRow(column(12,tags$div(HTML(toupper("<h4><strong>Graph show mother of what education are more Married</strong></h4>"))),offset =0)),
+              br(),
+              
+              
+              fluidRow(
+                column(12, plotOutput("marriage_educ"))
+              )
+              
+              
+              
+      )
+      
+      #end of marriage base on education
+      
            
        
       )

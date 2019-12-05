@@ -1,0 +1,1 @@
+infected_mother=fread("infection.csv", header = T)
