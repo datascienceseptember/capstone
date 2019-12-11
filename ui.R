@@ -3,13 +3,13 @@ library(shinydashboard)
 library(DT)
 require(data.table)
 
-#infected_mother=fread("infection.csv", header = T)
+#infected_mother=fread("final_data.csv", header = T)
 
 
-mother_birth_education_age=fread("mother_birth_education_age.csv", header = T)
+#mother_birth_education_age=fread("mother_birth_education_age.csv", header = T)
 
 
-gender=fread("different_btn_m_f_birth.csv",header = T)
+#gender=fread("different_btn_m_f_birth.csv",header = T)
 
 
 year<- c(2017,2016,2015,2014)
@@ -42,22 +42,32 @@ dashboardPage(
     
     #Infection Base on Age & Education
     sidebarMenu(
+      
       hr(),
-      menuItem( tags$div(HTML("<h4>Infection Base on"), 
+      menuItem( tags$div(HTML("<h4>Dataset Used"), 
+                         tags$br(),
+                         HTML("<h4></h4>")), tabName = "dataset", icon = icon("")),
+      hr(),
+      menuItem( tags$div(HTML("<h4>Mother Infection Base on"), 
                               tags$br(),
                               HTML("<h4>Age & Education</h4>")), tabName = "infection", icon = icon("")),
-      
+      hr(),
       
       menuItem(tags$div(HTML("<h4>Infection btn "), 
                         tags$br(),
                         HTML("<h4>Male and Female</h4>")), tabName = "infection_male_female", icon = icon("")),
       hr(),
-      menuItem(tags$div(HTML("<h4>Mother Birth base"), 
+      menuItem(tags$div(HTML("<h4>Mother Age &"), 
                         tags$br(),
-                        HTML("<h4>on  Eduction </h4>")), tabName = "med", icon = icon("")),
+                        HTML("<h4>Delivery Method </h4>")), tabName = "med", icon = icon("")),
       hr(),
-      menuItem(tags$div(HTML("<h4>Birth Gender</h4>")), tabName = "gender", icon = icon("")),
+      
+      menuItem(tags$div(HTML("<h4>Mother Delivery Method "), 
+                        tags$br(),
+                        HTML("<h4>   & Education</h4>")), tabName = "mothde", icon = icon("")),
       hr(),
+      #menuItem(tags$div(HTML("<h4>Birth Gender</h4>")), tabName = "gender", icon = icon("")),
+      #hr(),
       
       
       menuItem(tags$div(HTML("<h4>Mother marrige "), 
@@ -87,16 +97,11 @@ dashboardPage(
       
       tabItem(tabName = "infection",
               br(),
-              fluidRow(column(12,tags$div(HTML(toupper("<h4><strong>Graph show which age of mother have  high  change of being affected with Gonorrhea,Syphilis,Chlamydia,Hepatitis B, Hepatitis C</strong></h4>"))),offset =0)),
-              br(),
-              br(),
+              #fluidRow(column(12,tags$div(HTML(toupper("<h4><strong>Graph show which age of mother have  high  change of being affected with Gonorrhea,Syphilis,Chlamydia,Hepatitis B, Hepatitis C</strong></h4>"))),offset =0)),
+              #br(),
+              #br(),
               br(),
               fluidRow(
-                column(4,
-                       selectInput( inputId= "year", 
-                                    label =  "Year:", 
-                                    choices =  year)
-                ),
                 
                 column(4,
                        selectInput( inputId= "infection", 
@@ -104,17 +109,21 @@ dashboardPage(
                                     choices =  infection)
                 ),
                 
-                column(4,
-                       selectInput( inputId= "state", 
-                                    label =  "State:", 
-                                    choices =  state)
-                )
+                br(),
+                br()
+                
+              
                 
               ),
               
               fluidRow(
                 column(12, plotOutput("infection"))
               ),
+              br(),
+              br(),
+              br(),
+              br(),
+              br(),
               
               fluidRow(
                 column(12, plotOutput("infection_base_on_education"))
@@ -126,16 +135,7 @@ dashboardPage(
               br(),
              
               
-              fluidRow(
-                column(4,
-                       selectInput( inputId= "yearage", 
-                                    label =  "Year", 
-                                    choices =  year),offset = 4
-                )
-                
-               
-                
-              ),
+            
               br(),
               br(),
               
@@ -150,24 +150,46 @@ dashboardPage(
               )
               
       ),
-      
-      #gender
-      
-      
-      tabItem(tabName = "gender",
+      #mother delivery and education
+      tabItem(tabName = "mothde",
               br(),
               
               
-             
+              
               br(),
               br(),
               
               fluidRow(
-                column(6, plotOutput("gendertotal_2017")),
-                column(6, plotOutput("gendertotal_2014"))
+                column(12, plotOutput("mother_delivery_method_education"))
+              ),
+              br(),
+              br(),
+              br(),
+              fluidRow(
+                column(12, plotOutput("av_mother_delivery_method_education"))
               )
               
-               ),
+      ),
+      #end of delivery and education
+      
+      
+      #gender
+      
+      
+      #tabItem(tabName = "gender",
+          #    br(),
+              
+              
+             
+             # br(),
+              #br(),
+              
+              #fluidRow(
+               # column(6, plotOutput("gendertotal_2017")),
+                #column(6, plotOutput("gendertotal_2014"))
+              #)
+              
+              # ),
       
       
       
@@ -220,10 +242,22 @@ dashboardPage(
               
               
       )
-      
+      ,
       #end of marriage base on education
       
-           
+      #start dataset
+      
+      tabItem(tabName = "dataset",
+              
+              fluidRow(
+                column(12, DT::dataTableOutput("table"))
+              )
+              
+              
+              
+      )
+      
+      #end dataset
        
       )
       

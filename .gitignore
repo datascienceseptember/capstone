@@ -37,6 +37,8 @@ rsconnect/
 
 #csv
 *.csv
+#word
+*.docx
 
 
 
