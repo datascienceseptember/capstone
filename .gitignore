@@ -34,6 +34,7 @@ vignettes/*.pdf
 
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
+<<<<<<< HEAD
 
 #csv
 *.csv
@@ -42,3 +43,5 @@ rsconnect/
 
 
 
+=======
+>>>>>>> 141fbf4fa2595abb4cb6c9af043fb420902a5748
