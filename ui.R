@@ -29,7 +29,7 @@ dashboardPage(
       
       
       notificationItem("check on github", icon = icon("users"),
-                       href = "https://github.com/datascienceseptember/shiny_project_on_uefa")
+                       href = "https://github.com/datascienceseptember/capstone")
     )),
   
   #side bar
