@@ -111,7 +111,7 @@ select_data_2017_infection=na.omit(select(csv_2017_data,DOB_YY,DOB_MM,MEDUC,MAGE
 select_data_2014_infection=na.omit(select(csv_2014_data,DOB_YY,DOB_MM,MEDUC,MAGER,MBSTATE_REC,IP_GON,IP_SYPH,IP_CHLAM,IP_HEPB,IP_HEPC,SEX,DMAR,ME_ROUT))
 dim(select_data_2017)
 
-all_data=fread("katisho.csv", header = T) 
+all_data=fread("katisho1.csv", header = T) 
 all_data
 
 combine_2017_2014_infection <- rbind(select_data_2017_infection, select_data_2014_infection)
@@ -131,7 +131,7 @@ select_data_2017_all_infection
 
 final_data= na.omit(all_data)%>%
   mutate(motherEducation=sapply(MEDUC, mother_ed),devery_method=sapply(ME_ROUT, delivery_mode),cesarean_method=sapply(ME_ROUT, cesarean_mother),status=sapply(DMAR, marital_status)) 
-write.csv(final_data,"final_data.csv", row.names = FALSE)
+write.csv(final_data,"final_data1.csv", row.names = FALSE)
 #end check final csv
 
 write.csv(select_data_2017_all_infection,"infection.csv", row.names = FALSE)

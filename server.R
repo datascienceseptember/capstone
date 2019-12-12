@@ -2,8 +2,9 @@ library(shiny)
 library(tidyverse)
 require(data.table)
 
-infected_mother=fread("final_data.csv", header = T)
-infected_mother=subset(infected_mother, motherEducation !="Unknown")
+infected_mother=fread("final_data1.csv", header = T)
+
+infected_mother=subset(infected_mother, motherEducation !="Unknown")%>%arrange(motherEducation)
 unique(infected_mother$motherEducation)
 #gender=fread("different_btn_m_f_birth.csv",header = T)
 #mother_birth_education_age=fread("mother_birth_education_age.csv", header = T)
@@ -82,6 +83,7 @@ shinyServer(function(input, output) {
            mutate(percent=(total/grade_total)*100)%>%
            ggplot( aes(x=age_of_group, y=percent, fill=!!sym(check_diseas(input$infection)))) +
            geom_bar(stat="identity", position=position_dodge())+
+           scale_fill_manual(values=c('#009e73','#9e0000'))+
            geom_text(aes(label=paste0(round(percent,2),"%")),position=position_dodge(width=0.9), vjust=-0.25)+
            labs(title="Graph show infected mother base on the age ",
            x ="Mother Age", y = "Percent")
@@ -112,6 +114,7 @@ shinyServer(function(input, output) {
     
     
     
+
     
     
     temp1= infected_mother%>%select(DOB_YY, MEDUC, MAGER,motherEducation,!!sym(check_diseas(input$infection)))%>%
@@ -152,12 +155,16 @@ shinyServer(function(input, output) {
       }
     }
     
-    temp2=infected_mother%>%select( MEDUC, MAGER,motherEducation,!!sym(check_diseas(input$infection)))%>%filter(!!sym(check_diseas(input$infection))==c('Y','N'))%>%
-           group_by(motherEducation,!!sym(check_diseas(input$infection)))%>%
-          summarise(total=n())%>%mutate(grade_total=sapply(motherEducation, check))%>%mutate(percent=(total/grade_total*100)) %>%
+    temp2=infected_mother%>%select( MEDUC, MAGER,motherEducation,!!sym(check_diseas(input$infection)))%>%
+           filter(!!sym(check_diseas(input$infection))==c('Y','N'))%>%
+           group_by(motherEducation,MEDUC,!!sym(check_diseas(input$infection)))%>%
+           summarise(total=n())%>%mutate(grade_total=sapply(motherEducation, check))%>%
+           mutate(percent=(total/grade_total*100)) %>%arrange(MEDUC)%>%
+      
           ggplot(aes(x = motherEducation, y = percent))+
           geom_bar(position = "dodge",stat = "identity",aes(fill = !!sym(check_diseas(input$infection))))+
           geom_text(aes(label=paste0(round(percent,2),"%")),position=position_dodge(width=0.8), vjust=-0.25)+
+          scale_fill_manual(values=c('#009e73','#9e0000'))+
           labs(title="Graph show mother infection based on education ",x ="Mother Education", y = "Percent")
           theme_bw()
           temp2  
@@ -356,7 +363,7 @@ shinyServer(function(input, output) {
               ggplot( aes(x=motherEducation, y=percent, fill=devery_method)) +
               geom_bar(stat="identity", position=position_dodge())+geom_text(aes(label=paste0(round(percent,2),"%")),position=position_dodge(width=0.9), vjust=-0.25)+
               labs(title="Graph show mother birth base on Delivery method ",
-             x ="Mother Age", y = "Percent")
+             x ="Mother Education", y = "Percent")
              temp2
       
     
@@ -409,7 +416,7 @@ shinyServer(function(input, output) {
                 geom_text(aes(label=paste0(round(percent,2),"%")),position=position_dodge(width=0.9), vjust=-0.25)+
                 labs(title="Graph show mother birth with Cesarean or Not ",
                
-               x ="Mother Age", y = "Percent")
+               x ="Mother Education", y = "Percent")
                temp2 
   })
   #end mother delivery method and education
@@ -520,6 +527,7 @@ shinyServer(function(input, output) {
     temp2=temp1%>%mutate(grade_total=sapply(DOB_YY, check))%>%mutate(percent=(total/grade_total)*100)
           temp2%>%ggplot(aes(fill=SEX, y=percent, x=DOB_YY)) + 
           geom_text(aes(label=paste0(round(percent,2),"%")),position=position_dodge(width=0.9), vjust=-0.25)+
+          scale_fill_manual(values=c('#779e00','#9e7700'))+
           geom_bar(position="dodge", stat="identity")+xlab("YEAR")
     
   })
@@ -541,7 +549,7 @@ shinyServer(function(input, output) {
       }
     }
     
-    mycols <- c("#868686FF", "#CD534CFF")
+    mycols <- c('#779e00','#9e7700')
     
     
     temp1=  infected_mother%>%select(SEX,!!sym(check_diseas(input$male_female_infec)))%>%
@@ -631,9 +639,10 @@ shinyServer(function(input, output) {
       mutate(grade_total=sapply(motherEducation, check))%>%mutate(percent=(total/grade_total)*100)%>%
       ggplot( aes(x=motherEducation, y=percent, fill=status)) +
       geom_bar(stat="identity", position=position_dodge())+
-      scale_fill_manual(values=c('#E69F00','#009e28'))+
+      scale_fill_manual(values=c('#009e28','#E69F00'))+
       geom_text(aes(label=paste0(round(percent,2),"%")),position=position_dodge(width=0.9), vjust=-0.25)+
-      scale_fill_brewer(palette="Blues")+labs(title="Graph show mother Marriage base on education ",
+      #scale_fill_brewer(palette="Blues")+
+      labs(title="Graph show mother Marriage base on education ",
       x ="Mother education", y = "Percent")
       temp2
     
